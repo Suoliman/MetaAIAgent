@@ -11,7 +11,10 @@ openai.api_base = "https://openrouter.ai/api/v1"
 # تحميل البيانات من Google Sheets
 def load_data():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name("metaadsaiagent.json", scope)
+import json
+creds_dict = json.loads(st.secrets["GOOGLE_SHEETS_CREDENTIALS"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
     client = gspread.authorize(creds)
     sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/1OqveZqh87SHps1GNyr-lyZGNj0ogPDx0O1LLk0BLG-0/edit").worksheet("MetaAds")
     data = pd.DataFrame(sheet.get_all_records())
