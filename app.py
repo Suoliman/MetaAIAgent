@@ -1,12 +1,14 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 import gspread
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 
-# إعداد OpenRouter API
-openai.api_key = st.secrets["OPENROUTER_API_KEY"]
-openai.api_base = "https://openrouter.ai/api/v1"
+client = OpenAI(
+    api_key=st.secrets["OPENROUTER_API_KEY"],
+    base_url="https://openrouter.ai/api/v1"
+)
+
 
 # تحميل البيانات من Google Sheets
 def load_data():
@@ -40,7 +42,7 @@ if user_input:
     جاوب بشكل احترافي، بالعربية، وقدم تحليل واضح.
     """
 
-    res = openai.chat.completions.create(
+    res = client.chat.completions.create(
         model="meta-llama/llama-3-70b-instruct",
         messages=[{"role": "user", "content": prompt}]
     )
